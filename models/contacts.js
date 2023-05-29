@@ -22,10 +22,8 @@ const removeContact = async (contactId) => {
     const [result] = list.splice(index, 1);
     fs.writeFile(contactsPath, JSON.stringify(list));
     return result;
-  } else {
-    console.log(`\x1B[31m no contact with id ${contactId}`);
-    return {};
   }
+  return null;
 };
 
 const addContact = async (name, email, phone) => {
@@ -33,8 +31,9 @@ const addContact = async (name, email, phone) => {
   const argsValid = argList.every((argument) => Boolean(argument));
 
   if (!argsValid) {
-    console.log("\x1B[31m required arguments are missed");
-    return {};
+    const error = new Error("Required arguments are missed");
+    error.status = 400;
+    throw error;
   }
   const newContact = {
     id: nanoid(),

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const contactsServices = require("../../models/contacts");
+const { HttpError } = require;
 
 router.get("/", async (req, res, next) => {
   const result = await contactsServices.listContacts();
@@ -30,7 +31,22 @@ router.post("/", async (req, res, next) => {
 });
 
 router.delete("/:contactId", async (req, res, next) => {
-  res.json({ message: "template message" });
+  try {
+    const { contactId } = req.params;
+    const result = await contactsServices.removeContact(contactId);
+    if (!result) {
+      const error = new Error(`Contact with id: ${contactId} is not found`);
+      error.status = 404;
+      throw error;
+    }
+    res.status(204).json(result);
+    console.log(result);
+  } catch (error) {
+    const { status = 500, message = "Server error" } = error;
+    res.status(status).json({
+      message,
+    });
+  }
 });
 
 router.put("/:contactId", async (req, res, next) => {
