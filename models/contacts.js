@@ -26,29 +26,28 @@ const removeContact = async (contactId) => {
   return null;
 };
 
-const addContact = async (name, email, phone) => {
-  const argList = [...arguments];
-  const argsValid = argList.every((argument) => Boolean(argument));
-
-  if (!argsValid) {
-    const error = new Error("Required arguments are missed");
-    error.status = 400;
-    throw error;
-  }
+const addContact = async (body) => {
+  const list = await listContacts();
   const newContact = {
     id: nanoid(),
-    name,
-    email,
-    phone,
+    ...body,
   };
 
-  const list = await listContacts();
   list.push(newContact);
   await fs.writeFile(contactsPath, JSON.stringify(list));
   return newContact;
 };
 
-const updateContact = async (contactId, body) => {};
+const updateContact = async (contactId, body) => {
+  const list = await listContacts();
+  const index = list.findIndex((item) => item.id === contactId);
+  if (index === -1) {
+    return null;
+  }
+  list[index] = { contactId, ...body };
+  await fs.writeFile(contactsPath, JSON.stringify(list));
+  return list[index];
+};
 
 module.exports = {
   listContacts,
