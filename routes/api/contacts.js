@@ -6,7 +6,8 @@ const {
   updateFavoriteSchemaJoi,
 } = require("../../models");
 const { validateBody } = require("../../decorators");
-const { isValidId, authenticate } = require("../../middlewares");
+const { isValidId } = require("../../middlewares");
+const authenticate = require("../../middlewares/authenticate");
 
 router.get("/", authenticate, contactsControllers.getAllContacts);
 
