@@ -7,19 +7,27 @@ const {
 } = require("../../models");
 const { validateBody } = require("../../decorators");
 const { isValidId } = require("../../middlewares");
+const authenticate = require("../../middlewares/authenticate");
 
-router.get("/", contactsControllers.getAllContacts);
+router.get("/", authenticate, contactsControllers.getAllContacts);
 
-router.get("/:contactId", isValidId, contactsControllers.getContactById);
+router.get(
+  "/:contactId",
+  authenticate,
+  isValidId,
+  contactsControllers.getContactById
+);
 
 router.post(
   "/",
+  authenticate,
   validateBody(addContactSchemaJoi),
   contactsControllers.addContact
 );
 
 router.put(
   "/:contactId",
+  authenticate,
   isValidId,
   validateBody(addContactSchemaJoi),
   contactsControllers.updateContactById
@@ -27,11 +35,17 @@ router.put(
 
 router.patch(
   "/:contactId/favorite",
+  authenticate,
   isValidId,
   validateBody(updateFavoriteSchemaJoi),
   contactsControllers.updateStatusContact
 );
 
-router.delete("/:contactId", isValidId, contactsControllers.removeContactById);
+router.delete(
+  "/:contactId",
+  authenticate,
+  isValidId,
+  contactsControllers.removeContactById
+);
 
 module.exports = router;
