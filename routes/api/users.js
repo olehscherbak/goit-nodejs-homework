@@ -33,10 +33,6 @@ router.patch(
   "/avatars",
   authenticate,
   upload.single("avatars"),
-  (req, rew, next) => {
-    console.log("working");
-    next();
-  },
   usersControllers.updateAvatar
 );
 

@@ -2,7 +2,7 @@ const fs = require("fs/promises");
 const path = require("path");
 const Jimp = require("jimp");
 const { User } = require("../../models");
-const { HttpError } = require("../../helpers");
+// const { HttpError } = require("../../helpers");
 
 const updateAvatar = async (req, res) => {
   const { _id } = req.user;
@@ -11,10 +11,11 @@ const updateAvatar = async (req, res) => {
 
   await Jimp.read(tempUpload)
     .then((file) => {
-      console.log("resizing...");
       return file.resize(255, 255).quality(60).write(tempUpload);
     })
-    .catch((err) => console.log("jimp pakage error, can't resize avatar"));
+    .catch((err) =>
+      console.log(`jimp pakage error, can't resize avatar, ${err.message}`)
+    );
 
   // await Jimp.read(tempUpload, (err, file) => {
   //   if (err) {
@@ -30,7 +31,7 @@ const updateAvatar = async (req, res) => {
   const resultUpload = path.join(avatarsDir, filename);
   await fs.rename(tempUpload, resultUpload);
   const avatarURL = path.join("avatars", filename);
-  const result = await User.findByIdAndUpdate(_id, { avatarURL });
+  await User.findByIdAndUpdate(_id, { avatarURL });
   res.json({
     avatarURL,
   });
