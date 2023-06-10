@@ -8,6 +8,7 @@ const {
 } = require("../../models");
 const { usersControllers } = require("../../controllers");
 const authenticate = require("../../middlewares/authenticate");
+const upload = require("../../middlewares/upload");
 
 router.post(
   "/register",
@@ -25,7 +26,14 @@ router.patch(
   "/",
   authenticate,
   validateBody(updateSubscriptionJoi),
-  usersControllers.subscriptionUpdate
+  usersControllers.updateSubscription
+);
+
+router.patch(
+  "/avatars",
+  authenticate,
+  upload.single("avatars"),
+  usersControllers.updateAvatar
 );
 
 module.exports = router;
