@@ -4,6 +4,7 @@ const { validateBody } = require("../../decorators");
 const {
   registerSchemaJoi,
   loginSchemaJoi,
+  emailSchemaJoi,
   updateSubscriptionJoi,
 } = require("../../models");
 const { usersControllers } = require("../../controllers");
@@ -34,6 +35,14 @@ router.patch(
   authenticate,
   upload.single("avatars"),
   usersControllers.updateAvatar
+);
+
+router.get("/verify/:verificationToken", usersControllers.verify);
+
+router.post(
+  "/verify",
+  validateBody(emailSchemaJoi),
+  usersControllers.resendVerifyEmail
 );
 
 module.exports = router;
