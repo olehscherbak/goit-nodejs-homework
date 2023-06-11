@@ -8,6 +8,7 @@ const {
   User,
   registerSchemaJoi,
   loginSchemaJoi,
+  emailSchemaJoi,
   updateSubscriptionJoi,
 } = require("./user");
 
@@ -18,5 +19,6 @@ module.exports = {
   User,
   registerSchemaJoi,
   loginSchemaJoi,
+  emailSchemaJoi,
   updateSubscriptionJoi,
 };
